@@ -1,0 +1,15 @@
+.menuContainer {
+    @apply absolute px-5 py-1 flex justify-between w-1/4 left-1/2 top-10 rounded-md;
+    transform: translate(-50%);
+    border: 1px solid theme('colors.border1');
+    box-shadow:theme('colors.shadow1');
+
+    .iconwrapper {
+         @apply cursor-pointer;
+
+         .icon {
+            color: theme('colors.text1')
+         }
+    }
+}
+    
