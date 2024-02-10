@@ -1,3 +1,7 @@
 .toolContainer {
-    @apply absolute p-5 left-5 top-1/2 border;
+    @apply absolute p-5 left-5 top-1/2 border flex flex-col gap-3;
+
+    .toolText {
+       @apply font-bold mb-2;
+    }
 }

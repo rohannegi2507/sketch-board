@@ -18,11 +18,10 @@ const config: Config = {
       text1: '#3d3d3d',
       text2: '#e3e2fe',
       background1: 'rgba(255,255,255,0.9)',
-      border1:'#b8bb8b8',
+      border1:'#202019',
       border2:'#d6d6d6',
       shadow1:'0px 0px .9310142993927002px 0px rgba(0, 0, 0, .17), 0px 0px 3.1270833015441895px 0px rgba(0, 0, 0, .08), 0px 7px 14px 0px rgba(0, 0, 0, .05',
       shadow2:'',
-
     }
   },
   plugins: [],

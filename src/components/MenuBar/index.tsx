@@ -5,6 +5,7 @@ import styles from './index.module.css'
 import { MENU_ACTIVE_TYPE, MENU_ACTION_TYPE } from '@/constant';
 import {menuItemClick, actionItemClick } from '../../slice/menuSlice'
 import { useAppDispatch } from '@/hooks';
+
 export interface IMenuBar {
 }
 
