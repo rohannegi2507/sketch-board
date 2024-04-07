@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { changeColor, changeBrushSize } from '@/slice/toolSlice'
 import { MENU_ITEMS } from '@/constant'
 import { HexColorPicker } from "react-colorful";
+import {socket} from './../../../socket'
 
 type Props = {}
 
@@ -13,17 +14,25 @@ const Toolbox = (props: Props) => {
    const brushSize:number | undefined = useAppSelector(state=>state.tool[activeMenuItem].size)
    const showStrokeColor = activeMenuItem === MENU_ITEMS.PENCIL
    const showBrushSize = activeMenuItem === MENU_ITEMS.PENCIL || activeMenuItem === MENU_ITEMS.ERASER
-   const [color, setColor] = useState("#aabbcc");
+   const color:string | undefined = useAppSelector(state=>state.tool[activeMenuItem].color)
+  //  const [color, setColor] = useState(currentColor);
 
+  //  useEffect(()=>{
+  //   if(currentColor)
+  //   {
+  //     setColor(currentColor)
+  //   }
+  //  }, [currentColor])
 
    const handleStrokeColorChange = (color:string)=>{
-    setColor(color)
     disaptch(changeColor({item:activeMenuItem , color:color}))
+    socket.emit('changeConfig',{color:color,brushSize})
    }
 
 
-    const handleBrushSizeChange = (e:any)=>{
-        disaptch(changeBrushSize({item:activeMenuItem , size:parseInt(e.target.value)}))
+   const handleBrushSizeChange = (e:any)=>{
+      disaptch(changeBrushSize({item:activeMenuItem , size:parseInt(e.target.value)}))
+      socket.emit('changeConfig',{color,brushSize:e.target.value})
     }
 
   return (

@@ -2,6 +2,8 @@ import { MENU_ITEMS } from '@/constant'
 import { useAppSelector, useAppDispatch } from '@/hooks'
 import React, { useEffect, useRef } from 'react'
 import { actionItemClick } from '@/slice/menuSlice'
+import { socket } from "../../../socket";
+import { changeBrushSize, changeColor } from '@/slice/toolSlice';
 
 type Props = {}
 
@@ -12,6 +14,7 @@ const Board = (props: Props) => {
     const dispatch = useAppDispatch()
     const drawHistory:any = useRef([])
     const historyPointer = useRef(0)
+    const disaptch = useAppDispatch()
 
     const activeMenuItem = useAppSelector(state=>state.menu.activeMenuItem)
     const actionMenuItem = useAppSelector(state=>state.menu.actionMenuItem)
@@ -46,12 +49,26 @@ const Board = (props: Props) => {
         const canvas:any = canvasRef.current
         const context = canvas.getContext('2d')
 
-        const changeConfig = ()=>{
-            context.strokeStyle = color
-            context.lineWidth = brushSize
+        const changeConfig = (color, brushSize)=>{
+          context.strokeStyle = color
+          context.lineWidth = brushSize
         }
     
-        changeConfig()
+        changeConfig(color, brushSize)
+
+        const handleConfigChange = (config) => {
+            changeConfig(config.color, config.brushSize)
+            if(config.color !== color)
+            {
+                disaptch(changeColor({item:MENU_ITEMS.PENCIL , color:config.color}))
+            }
+            if(config.brushSize !== brushSize)
+            {
+              disaptch(changeBrushSize({item:MENU_ITEMS.PENCIL , size:parseInt(config.brushSize)}))
+            }
+        }
+
+        socket.on('changeConfig',handleConfigChange)
 
     },[color,brushSize])
 
@@ -72,30 +89,57 @@ const Board = (props: Props) => {
              historyPointer.current = drawHistory.current.length - 1
           }
         }
+        
+        const beginPath = (x,y)=>{
+            context.beginPath()
+            context.moveTo(x, y)
+        }
+        
+        const drawline = (x,y)=>{
+            context.lineTo(x, y)
+            context.stroke()
+        }
 
         const handleMouseMove = (e:any)=>{
             if(!shouldDraw.current) return 
-            context.lineTo(e.clientX, e.clientY)
-            context.stroke()
+            drawline(e.clientX, e.clientY)
+            socket.emit('drawLine', {x: e.clientX, y:e.clientY})
         }
 
         const handleMouseDown = (e:any)=>{
             shouldDraw.current = true
-
-            context.beginPath()
-            context.moveTo(e.clientX, e.clientY)
+            beginPath(e.clientX, e.clientY)
+            socket.emit('beginPath', {x: e.clientX, y:e.clientY})
+        }
+        
+        const handleBeginPath = (path)=>{
+            beginPath(path.x, path.y)
         }
 
+        const handleDrawLine = (path)=>{
+            drawline(path.x, path.y)
+        }
 
         canvas.addEventListener('mouseup', handleMouseUp)
         canvas.addEventListener('mousedown', handleMouseDown)
         canvas.addEventListener('mousemove', handleMouseMove)
 
+        socket.on('beginPath', handleBeginPath)
+        socket.on('drawLine', handleDrawLine)
+        socket.on('connect',()=>{
+            console.log("Connect with the server")
+        })
 
         return ()=>{
             canvas.removeEventListener('mouseup', handleMouseUp)
             canvas.removeEventListener('mousedown', handleMouseDown)
             canvas.removeEventListener('mousemove', handleMouseMove)
+            
+            socket.off('beginPath', handleBeginPath)
+            socket.off('drawlineLine', handleDrawLine)
+            socket.off('connect',()=>{
+                console.log("Connect with the server")
+            })
         }
     },[])
 
