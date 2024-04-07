@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react'
 import { actionItemClick } from '@/slice/menuSlice'
 import { socket } from "../../../socket";
 import { changeBrushSize, changeColor } from '@/slice/toolSlice';
-type Coordinates {
+type Coordinates = {
     x:number,
     y:number
 }
