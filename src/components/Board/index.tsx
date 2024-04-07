@@ -49,14 +49,14 @@ const Board = (props: Props) => {
         const canvas:any = canvasRef.current
         const context = canvas.getContext('2d')
 
-        const changeConfig = (color, brushSize)=>{
+        const changeConfig = (color:string| undefined, brushSize:number|undefined)=>{
           context.strokeStyle = color
           context.lineWidth = brushSize
         }
     
         changeConfig(color, brushSize)
 
-        const handleConfigChange = (config) => {
+        const handleConfigChange = (config:{color:string, brushSize: number}) => {
             changeConfig(config.color, config.brushSize)
             if(config.color !== color)
             {
@@ -64,7 +64,7 @@ const Board = (props: Props) => {
             }
             if(config.brushSize !== brushSize)
             {
-              disaptch(changeBrushSize({item:MENU_ITEMS.PENCIL , size:parseInt(config.brushSize)}))
+              disaptch(changeBrushSize({item:MENU_ITEMS.PENCIL , size:config.brushSize}))
             }
         }
 

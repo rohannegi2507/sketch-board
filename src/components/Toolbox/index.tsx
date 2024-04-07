@@ -15,14 +15,6 @@ const Toolbox = (props: Props) => {
    const showStrokeColor = activeMenuItem === MENU_ITEMS.PENCIL
    const showBrushSize = activeMenuItem === MENU_ITEMS.PENCIL || activeMenuItem === MENU_ITEMS.ERASER
    const color:string | undefined = useAppSelector(state=>state.tool[activeMenuItem].color)
-  //  const [color, setColor] = useState(currentColor);
-
-  //  useEffect(()=>{
-  //   if(currentColor)
-  //   {
-  //     setColor(currentColor)
-  //   }
-  //  }, [currentColor])
 
    const handleStrokeColorChange = (color:string)=>{
     disaptch(changeColor({item:activeMenuItem , color:color}))
