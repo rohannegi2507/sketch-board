@@ -4,7 +4,10 @@ import React, { useEffect, useRef } from 'react'
 import { actionItemClick } from '@/slice/menuSlice'
 import { socket } from "../../../socket";
 import { changeBrushSize, changeColor } from '@/slice/toolSlice';
-
+type Coordinates {
+    x:number,
+    y:number
+}
 type Props = {}
 
 const Board = (props: Props) => {
@@ -90,12 +93,12 @@ const Board = (props: Props) => {
           }
         }
         
-        const beginPath = (x,y)=>{
+        const beginPath = (x:number,y:number)=>{
             context.beginPath()
             context.moveTo(x, y)
         }
         
-        const drawline = (x,y)=>{
+        const drawline = (x:number,y:number)=>{
             context.lineTo(x, y)
             context.stroke()
         }
@@ -112,11 +115,11 @@ const Board = (props: Props) => {
             socket.emit('beginPath', {x: e.clientX, y:e.clientY})
         }
         
-        const handleBeginPath = (path)=>{
+        const handleBeginPath = (path:Coordinates)=>{
             beginPath(path.x, path.y)
         }
 
-        const handleDrawLine = (path)=>{
+        const handleDrawLine = (path:Coordinates)=>{
             drawline(path.x, path.y)
         }
 
